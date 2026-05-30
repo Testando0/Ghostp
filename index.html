@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Ghostzin'zk • Portal Dark</title>
+    <!-- Font Awesome 6 (ícones gratuitos) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Poppins', system-ui, -apple-system, BlinkMacSystemFont, 'Roboto', sans-serif;
+        }
+
+        body {
+            background: radial-gradient(circle at 10% 20%, #0b0308, #050101);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem 1.5rem;
+        }
+
+        /* container principal com vidro e borda vermelha */
+        .glass-container {
+            max-width: 550px;
+            width: 100%;
+            background: rgba(10, 2, 5, 0.65);
+            backdrop-filter: blur(12px);
+            border-radius: 4rem 2rem 4rem 2rem;
+            border: 1.8px solid #d32f2f;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.6), 0 0 0 2px rgba(211, 47, 47, 0.2);
+            padding: 2rem 1.5rem 2.2rem;
+            transition: all 0.2s ease;
+        }
+
+        /* área da imagem circular */
+        .avatar-area {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 1rem;
+        }
+
+        .circle-img {
+            width: 140px;
+            height: 140px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid #e53935;
+            box-shadow: 0 0 0 4px rgba(229, 57, 53, 0.4), 0 10px 25px rgba(0,0,0,0.5);
+            background: #1e0a0a;
+            transition: transform 0.25s ease, box-shadow 0.2s;
+        }
+
+        .circle-img:hover {
+            transform: scale(1.02);
+            box-shadow: 0 0 0 6px rgba(229, 57, 53, 0.6);
+        }
+
+        /* título Ghostzin'zk vermelho */
+        .ghost-title {
+            text-align: center;
+            font-size: 2.2rem;
+            font-weight: 800;
+            letter-spacing: 2px;
+            margin: 0.8rem 0 1.8rem 0;
+            color: #ff3a3a;
+            text-shadow: 0 0 6px #ff0000, 0 2px 3px black;
+            word-break: keep-all;
+            background: linear-gradient(135deg, #ff5c5c, #b91c1c);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            text-shadow: none;
+            /* fallback cor sólida */
+        }
+        /* fallback para navegadores */
+        @supports not (background-clip: text) {
+            .ghost-title {
+                color: #e63946;
+                text-shadow: 0 0 3px #8b0000;
+            }
+        }
+
+        /* grade das bolhas (bubbles) */
+        .bubbles-grid {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 1.8rem;
+            margin: 2rem 0 1.5rem;
+        }
+
+        /* cada bolha clicável - estilo arredondado com borda vermelha forte */
+        .bubble-card {
+            background: rgba(20, 5, 8, 0.85);
+            backdrop-filter: blur(4px);
+            width: 130px;
+            padding: 1.2rem 0.6rem;
+            border-radius: 60px;
+            border: 2px solid #e53935;
+            box-shadow: 0 8px 18px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.05);
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .bubble-card i {
+            font-size: 2.2rem;
+            color: #ff6b6b;
+            filter: drop-shadow(0 2px 4px #2b0000);
+        }
+
+        .bubble-card span {
+            font-weight: 600;
+            font-size: 1rem;
+            color: #ffcdcd;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            background: #2d0c0c70;
+            padding: 4px 12px;
+            border-radius: 40px;
+            backdrop-filter: blur(2px);
+        }
+
+        .bubble-card:hover {
+            transform: translateY(-8px);
+            border-color: #ff7676;
+            background: #2f1212cc;
+            box-shadow: 0 15px 25px rgba(200, 30, 30, 0.4);
+        }
+
+        .bubble-card:active {
+            transform: translateY(0px);
+        }
+
+        /* estilo do "menuzin" - modal estilizado com tema dark/red */
+        .menu-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(8px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            visibility: hidden;
+            opacity: 0;
+            transition: visibility 0.2s, opacity 0.2s;
+        }
+
+        .menu-modal.active {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        .modal-card {
+            background: #0f0407e6;
+            border: 2px solid #e63946;
+            border-radius: 3rem 1.5rem 3rem 1.5rem;
+            width: 85%;
+            max-width: 350px;
+            padding: 1.8rem 1.5rem;
+            text-align: center;
+            box-shadow: 0 30px 40px black;
+            transform: scale(0.9);
+            transition: transform 0.2s ease-out;
+        }
+
+        .menu-modal.active .modal-card {
+            transform: scale(1);
+        }
+
+        .modal-card h3 {
+            font-size: 1.8rem;
+            color: #f55;
+            border-bottom: 2px dashed #b91c1c;
+            display: inline-block;
+            margin-bottom: 1rem;
+            font-weight: 700;
+        }
+
+        .modal-card p, .modal-card ul {
+            color: #f0cfcf;
+            font-size: 1.1rem;
+            margin: 1rem 0;
+            text-align: left;
+        }
+
+        .modal-card ul {
+            list-style: none;
+            padding-left: 0.5rem;
+        }
+
+        .modal-card li {
+            margin: 0.7rem 0;
+            border-left: 3px solid #e53935;
+            padding-left: 12px;
+            font-weight: 500;
+        }
+
+        .close-modal {
+            background: #b91c1c;
+            border: none;
+            color: white;
+            padding: 8px 20px;
+            border-radius: 60px;
+            font-weight: bold;
+            margin-top: 1rem;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: 0.2s;
+        }
+
+        .close-modal:hover {
+            background: #ff4d4d;
+            transform: scale(0.96);
+        }
+
+        .number-highlight {
+            font-size: 1.6rem;
+            font-weight: bold;
+            background: #2e0a0a;
+            padding: 12px;
+            border-radius: 60px;
+            letter-spacing: 2px;
+            color: #ff7b7b;
+            font-family: monospace;
+            border: 1px solid #e63946;
+        }
+
+        /* rodapé ou detalhes */
+        .feminino-tag {
+            display: flex;
+            justify-content: center;
+            margin-top: 1rem;
+            font-size: 0.75rem;
+            gap: 10px;
+            color: #ff8989;
+            border-top: 1px solid #3a1818;
+            padding-top: 1rem;
+        }
+
+        .feminino-tag i {
+            font-size: 0.8rem;
+            color: #ff99aa;
+        }
+
+        /* responsivo: bolhas quebram em 2 colunas */
+        @media (max-width: 480px) {
+            .glass-container {
+                padding: 1.5rem 1rem;
+            }
+            .bubble-card {
+                width: 115px;
+                padding: 1rem 0.3rem;
+            }
+            .bubble-card i {
+                font-size: 1.8rem;
+            }
+            .ghost-title {
+                font-size: 1.8rem;
+            }
+            .circle-img {
+                width: 110px;
+                height: 110px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="glass-container">
+    <!-- imagem no topo dentro de círculo arredondado (borda circular) -->
+    <div class="avatar-area">
+        <img class="circle-img" id="profileImage" src="https://placehold.co/400x400/1f0a0a/ff4d4d?text=GHOST" alt="avatar ghost">
+        <!-- ⚠️ Substitua o src acima pelo link da sua imagem. Ex: "https://seusite.com/foto.jpg" -->
+    </div>
+
+    <!-- texto Ghostzin'zk em vermelho -->
+    <div class="ghost-title">GHOSTZIN'ZK</div>
+
+    <!-- grade de bolhas clicáveis (menuzin) -->
+    <div class="bubbles-grid">
+        <!-- bolha MEU NÚMERO -->
+        <div class="bubble-card" data-type="numero">
+            <i class="fas fa-phone-alt"></i>
+            <span>Meu número</span>
+        </div>
+        <!-- bolha ARTISTA PREFERIDO -->
+        <div class="bubble-card" data-type="artista">
+            <i class="fas fa-microphone-alt"></i>
+            <span>Artista preferido</span>
+        </div>
+        <!-- bolha ANIMES -->
+        <div class="bubble-card" data-type="anime">
+            <i class="fas fa-dragon"></i>
+            <span>Animes</span>
+        </div>
+        <!-- bolha CANTORA -->
+        <div class="bubble-card" data-type="cantora">
+            <i class="fas fa-music"></i>
+            <span>Cantora</span>
+        </div>
+    </div>
+
+    <!-- toque feminino sutil no rodapé (bordas e detalhe) -->
+    <div class="feminino-tag">
+        <i class="fas fa-heart"></i> 
+        <span>♡ feminine essence ♡</span>
+        <i class="fas fa-feather-alt"></i>
+    </div>
+</div>
+
+<!-- ========= MODAL "MENUZIN" ========= -->
+<div id="menuModal" class="menu-modal">
+    <div class="modal-card">
+        <h3 id="modalTitle">...</h3>
+        <div id="modalContent">
+            <p>carregando...</p>
+        </div>
+        <button class="close-modal" id="closeModalBtn">FECHAR ✦</button>
+    </div>
+</div>
+
+<script>
+    // Elementos do modal
+    const modal = document.getElementById('menuModal');
+    const modalTitle = document.getElementById('modalTitle');
+    const modalContent = document.getElementById('modalContent');
+    const closeBtn = document.getElementById('closeModalBtn');
+
+    // Função que fecha o modal
+    function closeModal() {
+        modal.classList.remove('active');
+    }
+
+    // Função que abre o modal com conteúdo dinâmico (menuzin)
+    function openMenu(type) {
+        // reset
+        modalTitle.innerText = '';
+        modalContent.innerHTML = '';
+
+        // Construir conteúdo baseado no tipo da bolha
+        switch(type) {
+            case 'numero':
+                modalTitle.innerText = '📞 MEU NÚMERO';
+                modalContent.innerHTML = `
+                    <div style="text-align: center;">
+                        <p style="margin-bottom: 0.8rem;">✦ contato direto ✦</p>
+                        <div class="number-highlight">+55 11 98765-4321</div>
+                        <p style="font-size: 0.85rem; margin-top: 12px;">📱 Whatsapp / Telefone<br> (horário noturno preferencial)</p>
+                    </div>
+                `;
+                break;
+            case 'artista':
+                modalTitle.innerText = '🎤 ARTISTA PREFERIDO';
+                modalContent.innerHTML = `
+                    <ul>
+                        <li><i class="fas fa-star" style="color:#ff6b6b;"></i> <strong>Billie Eilish</strong> – vibe sombria e única</li>
+                        <li><i class="fas fa-star" style="color:#ff6b6b;"></i> <strong>The Weeknd</strong> – synthwave & dark pop</li>
+                        <li><i class="fas fa-star" style="color:#ff6b6b;"></i> <strong>Lana Del Rey</strong> – melancolia vintage</li>
+                        <li><i class="fas fa-heart" style="color:#f55;"></i> Menção: <em>Aurora</em> (etérea)</li>
+                    </ul>
+                    <p style="margin-top: 0.5rem; font-style:italic;">"Música que toca a alma sombria"</p>
+                `;
+                break;
+            case 'anime':
+                modalTitle.innerText = '🍥 ANIMES • DARK/FEM';
+                modalContent.innerHTML = `
+                    <ul>
+                        <li>🔮 <strong>Chainsaw Man</strong> – ação, demônios, estética cruel</li>
+                        <li>🌙 <strong>Jujutsu Kaisen</strong> – maldições e poder sombrio</li>
+                        <li>⚔️ <strong>Akame ga Kill!</strong> – intenso e trágico</li>
+                        <li>🌸 <strong>Hell's Paradise</strong> – atmosfera densa</li>
+                        <li>🕷️ <strong>Kumo Desu ga, Nani ka?</strong> – protagonista feminina forte</li>
+                    </ul>
+                    <p>✦ recomendações com pegada dark e feminina ✦</p>
+                `;
+                break;
+            case 'cantora':
+                modalTitle.innerText = '🎙️ CANTORAS FAVORITAS';
+                modalContent.innerHTML = `
+                    <ul>
+                        <li>🎤 <strong>Billie Eilish</strong> – voz assombrosa e letras profundas</li>
+                        <li>🎤 <strong>Halsey</strong> – rock alternativo e poesia visceral</li>
+                        <li>🎤 <strong>AURORA</strong> – mística e etérea</li>
+                        <li>🎤 <strong>Poppy</strong> – metal + dark pop</li>
+                        <li>🎤 <strong>Melanie Martinez</strong> – estética creepy e doce</li>
+                    </ul>
+                    <p style="margin-top: 8px;">🎧 "feminino sombrio e poderoso"</p>
+                `;
+                break;
+            default:
+                modalTitle.innerText = '🩸 Ghostzin';
+                modalContent.innerHTML = `<p>sangue e rosas... clique em uma bolha.</p>`;
+        }
+
+        // Abrir modal com efeito
+        modal.classList.add('active');
+    }
+
+    // Adicionar eventos para cada bolha (data-type)
+    const bubbles = document.querySelectorAll('.bubble-card');
+    bubbles.forEach(bubble => {
+        bubble.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const type = bubble.getAttribute('data-type');
+            if(type) openMenu(type);
+        });
+    });
+
+    // Fechar modal ao clicar no botão
+    closeBtn.addEventListener('click', closeModal);
+    // Fechar modal ao clicar fora do conteúdo (no overlay)
+    modal.addEventListener('click', (e) => {
+        if(e.target === modal) {
+            closeModal();
+        }
+    });
+
+    // Previne scroll ao fundo quando modal aberto
+    modal.addEventListener('wheel', (e) => {
+        e.stopPropagation();
+    }, { passive: false });
+    
+    // Opcional: feedback visual para quem quiser trocar imagem dinamicamente
+    // Para facilitar, a imagem placeholder pode ser trocada via console ou edição direta
+    // O usuário pode alterar o src da imagem #profileImage
+
+    // Pequeno detalhe: caso queira demonstrar troca de imagem, mas deixamos manual via código
+    console.log("✨ Página Ghostzin'ZK carregada! Para inserir sua imagem, edite o src do elemento .circle-img");
+</script>
+
+<!-- Instrução visual sobre o link da imagem -->
+<div style="position: fixed; bottom: 10px; left: 0; right: 0; text-align: center; font-size: 10px; background: #00000080; color:#ff8888; padding: 4px; backdrop-filter: blur(2px); pointer-events: none; z-index: 999;">
+    ⚡ Troque a imagem: edite o atributo "src" da tag &lt;img class="circle-img"&gt; no código HTML.
+</div>
+</body>
+</html>
