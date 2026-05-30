@@ -1,449 +1,408 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>Ghostzin'zk • Portal Dark</title>
-    <!-- Font Awesome 6 (ícones gratuitos) -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', 'Poppins', system-ui, -apple-system, BlinkMacSystemFont, 'Roboto', sans-serif;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>GHOSTZIN'ZK</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-        body {
-            background: radial-gradient(circle at 10% 20%, #0b0308, #050101);
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 2rem 1.5rem;
-        }
+  :root {
+    --red: #e0000a;
+    --red-glow: #ff0015;
+    --dark: #0a0000;
+    --card-bg: rgba(18, 2, 2, 0.82);
+    --item-bg: rgba(80, 10, 10, 0.55);
+    --item-border: rgba(200, 20, 20, 0.35);
+    --text: #fff;
+    --sub: rgba(255,200,200,0.7);
+  }
 
-        /* container principal com vidro e borda vermelha */
-        .glass-container {
-            max-width: 550px;
-            width: 100%;
-            background: rgba(10, 2, 5, 0.65);
-            backdrop-filter: blur(12px);
-            border-radius: 4rem 2rem 4rem 2rem;
-            border: 1.8px solid #d32f2f;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.6), 0 0 0 2px rgba(211, 47, 47, 0.2);
-            padding: 2rem 1.5rem 2.2rem;
-            transition: all 0.2s ease;
-        }
+  html, body {
+    min-height: 100%;
+    height: 100%;
+  }
 
-        /* área da imagem circular */
-        .avatar-area {
-            display: flex;
-            justify-content: center;
-            margin-bottom: 1rem;
-        }
+  body {
+    font-family: 'Rajdhani', sans-serif;
+    background: var(--dark);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    overflow-x: hidden;
+    position: relative;
+  }
 
-        .circle-img {
-            width: 140px;
-            height: 140px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 3px solid #e53935;
-            box-shadow: 0 0 0 4px rgba(229, 57, 53, 0.4), 0 10px 25px rgba(0,0,0,0.5);
-            background: #1e0a0a;
-            transition: transform 0.25s ease, box-shadow 0.2s;
-        }
+  /* Background */
+  .bg {
+    position: fixed;
+    inset: 0;
+    background-image: url('https://i.ibb.co/F4kZY1x4/1003900249.jpg');
+    background-size: cover;
+    background-position: center;
+    filter: blur(6px) brightness(0.35) saturate(1.4);
+    transform: scale(1.08);
+    z-index: 0;
+  }
 
-        .circle-img:hover {
-            transform: scale(1.02);
-            box-shadow: 0 0 0 6px rgba(229, 57, 53, 0.6);
-        }
+  /* Red corner brackets overlay */
+  .corners {
+    position: fixed;
+    inset: 12px;
+    z-index: 1;
+    pointer-events: none;
+  }
+  .corners::before, .corners::after,
+  .corners span::before, .corners span::after {
+    content: '';
+    position: absolute;
+    width: 22px; height: 22px;
+    border-color: var(--red);
+    border-style: solid;
+  }
+  .corners::before { top:0; left:0; border-width: 3px 0 0 3px; }
+  .corners::after  { top:0; right:0; border-width: 3px 3px 0 0; }
+  .corners span::before { bottom:0; left:0; border-width: 0 0 3px 3px; }
+  .corners span::after  { bottom:0; right:0; border-width: 0 3px 3px 0; }
 
-        /* título Ghostzin'zk vermelho */
-        .ghost-title {
-            text-align: center;
-            font-size: 2.2rem;
-            font-weight: 800;
-            letter-spacing: 2px;
-            margin: 0.8rem 0 1.8rem 0;
-            color: #ff3a3a;
-            text-shadow: 0 0 6px #ff0000, 0 2px 3px black;
-            word-break: keep-all;
-            background: linear-gradient(135deg, #ff5c5c, #b91c1c);
-            background-clip: text;
-            -webkit-background-clip: text;
-            color: transparent;
-            text-shadow: none;
-            /* fallback cor sólida */
-        }
-        /* fallback para navegadores */
-        @supports not (background-clip: text) {
-            .ghost-title {
-                color: #e63946;
-                text-shadow: 0 0 3px #8b0000;
-            }
-        }
+  /* Card */
+  .card {
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    max-width: 390px;
+    margin: 0 auto;
+    padding: 36px 22px 32px;
+    background: var(--card-bg);
+    border: 1px solid rgba(220,20,20,0.3);
+    border-radius: 18px;
+    box-shadow:
+      0 0 40px rgba(220,0,10,0.25),
+      0 0 80px rgba(220,0,10,0.12),
+      inset 0 0 30px rgba(0,0,0,0.5);
+    backdrop-filter: blur(12px);
+    animation: fadeIn 0.6s ease;
+  }
 
-        /* grade das bolhas (bubbles) */
-        .bubbles-grid {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 1.8rem;
-            margin: 2rem 0 1.5rem;
-        }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(18px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
 
-        /* cada bolha clicável - estilo arredondado com borda vermelha forte */
-        .bubble-card {
-            background: rgba(20, 5, 8, 0.85);
-            backdrop-filter: blur(4px);
-            width: 130px;
-            padding: 1.2rem 0.6rem;
-            border-radius: 60px;
-            border: 2px solid #e53935;
-            box-shadow: 0 8px 18px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.05);
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.2s cubic-bezier(0.2, 0.9, 0.4, 1.1);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 8px;
-        }
+  /* Profile avatar */
+  .avatar-wrap {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 18px;
+  }
 
-        .bubble-card i {
-            font-size: 2.2rem;
-            color: #ff6b6b;
-            filter: drop-shadow(0 2px 4px #2b0000);
-        }
+  .avatar-ring {
+    width: 110px; height: 110px;
+    border-radius: 50%;
+    padding: 3px;
+    background: conic-gradient(var(--red-glow), #6b0000, var(--red-glow));
+    box-shadow: 0 0 22px rgba(255,0,20,0.7), 0 0 50px rgba(200,0,20,0.35);
+    animation: spin 6s linear infinite;
+  }
 
-        .bubble-card span {
-            font-weight: 600;
-            font-size: 1rem;
-            color: #ffcdcd;
-            letter-spacing: 0.5px;
-            text-transform: uppercase;
-            background: #2d0c0c70;
-            padding: 4px 12px;
-            border-radius: 40px;
-            backdrop-filter: blur(2px);
-        }
+  @keyframes spin {
+    from { filter: hue-rotate(0deg) drop-shadow(0 0 8px #f00); }
+    50%  { filter: hue-rotate(20deg) drop-shadow(0 0 18px #ff2200); }
+    to   { filter: hue-rotate(0deg) drop-shadow(0 0 8px #f00); }
+  }
 
-        .bubble-card:hover {
-            transform: translateY(-8px);
-            border-color: #ff7676;
-            background: #2f1212cc;
-            box-shadow: 0 15px 25px rgba(200, 30, 30, 0.4);
-        }
+  .avatar-inner {
+    width: 100%; height: 100%;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 2px solid #1a0000;
+  }
 
-        .bubble-card:active {
-            transform: translateY(0px);
-        }
+  .avatar-inner img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    object-position: top center;
+  }
 
-        /* estilo do "menuzin" - modal estilizado com tema dark/red */
-        .menu-modal {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.85);
-            backdrop-filter: blur(8px);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 1000;
-            visibility: hidden;
-            opacity: 0;
-            transition: visibility 0.2s, opacity 0.2s;
-        }
+  /* Name */
+  .name {
+    text-align: center;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2.1rem;
+    letter-spacing: 0.22em;
+    color: #fff;
+    text-shadow: 0 0 12px rgba(255,30,30,0.8), 0 0 30px rgba(200,0,0,0.4);
+    margin-bottom: 28px;
+    user-select: none;
+  }
 
-        .menu-modal.active {
-            visibility: visible;
-            opacity: 1;
-        }
+  .name span {
+    color: var(--red-glow);
+    text-shadow: 0 0 16px var(--red-glow), 0 0 40px rgba(255,0,20,0.5);
+  }
 
-        .modal-card {
-            background: #0f0407e6;
-            border: 2px solid #e63946;
-            border-radius: 3rem 1.5rem 3rem 1.5rem;
-            width: 85%;
-            max-width: 350px;
-            padding: 1.8rem 1.5rem;
-            text-align: center;
-            box-shadow: 0 30px 40px black;
-            transform: scale(0.9);
-            transition: transform 0.2s ease-out;
-        }
+  /* Accordion items */
+  .accordion {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
 
-        .menu-modal.active .modal-card {
-            transform: scale(1);
-        }
+  .acc-item {
+    border-radius: 12px;
+    border: 1px solid var(--item-border);
+    background: var(--item-bg);
+    overflow: hidden;
+    transition: border-color 0.3s, box-shadow 0.3s;
+  }
 
-        .modal-card h3 {
-            font-size: 1.8rem;
-            color: #f55;
-            border-bottom: 2px dashed #b91c1c;
-            display: inline-block;
-            margin-bottom: 1rem;
-            font-weight: 700;
-        }
+  .acc-item.open {
+    border-color: rgba(255, 30, 30, 0.6);
+    box-shadow: 0 0 16px rgba(200,0,10,0.25);
+  }
 
-        .modal-card p, .modal-card ul {
-            color: #f0cfcf;
-            font-size: 1.1rem;
-            margin: 1rem 0;
-            text-align: left;
-        }
+  .acc-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 15px 18px;
+    cursor: pointer;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+    transition: background 0.2s;
+  }
 
-        .modal-card ul {
-            list-style: none;
-            padding-left: 0.5rem;
-        }
+  .acc-header:active {
+    background: rgba(200, 0, 10, 0.15);
+  }
 
-        .modal-card li {
-            margin: 0.7rem 0;
-            border-left: 3px solid #e53935;
-            padding-left: 12px;
-            font-weight: 500;
-        }
+  .acc-icon {
+    width: 38px; height: 38px;
+    background: rgba(180, 10, 10, 0.45);
+    border-radius: 9px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    font-size: 1.1rem;
+    border: 1px solid rgba(255,50,50,0.3);
+  }
 
-        .close-modal {
-            background: #b91c1c;
-            border: none;
-            color: white;
-            padding: 8px 20px;
-            border-radius: 60px;
-            font-weight: bold;
-            margin-top: 1rem;
-            cursor: pointer;
-            font-size: 0.9rem;
-            transition: 0.2s;
-        }
+  .acc-label {
+    flex: 1;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.05rem;
+    letter-spacing: 0.12em;
+    color: var(--text);
+  }
 
-        .close-modal:hover {
-            background: #ff4d4d;
-            transform: scale(0.96);
-        }
+  .acc-arrow {
+    font-size: 0.75rem;
+    color: var(--red);
+    transition: transform 0.3s ease;
+  }
 
-        .number-highlight {
-            font-size: 1.6rem;
-            font-weight: bold;
-            background: #2e0a0a;
-            padding: 12px;
-            border-radius: 60px;
-            letter-spacing: 2px;
-            color: #ff7b7b;
-            font-family: monospace;
-            border: 1px solid #e63946;
-        }
+  .acc-item.open .acc-arrow {
+    transform: rotate(90deg);
+  }
 
-        /* rodapé ou detalhes */
-        .feminino-tag {
-            display: flex;
-            justify-content: center;
-            margin-top: 1rem;
-            font-size: 0.75rem;
-            gap: 10px;
-            color: #ff8989;
-            border-top: 1px solid #3a1818;
-            padding-top: 1rem;
-        }
+  /* Content panel */
+  .acc-body {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s cubic-bezier(0.4,0,0.2,1);
+  }
 
-        .feminino-tag i {
-            font-size: 0.8rem;
-            color: #ff99aa;
-        }
+  .acc-item.open .acc-body {
+    max-height: 600px;
+  }
 
-        /* responsivo: bolhas quebram em 2 colunas */
-        @media (max-width: 480px) {
-            .glass-container {
-                padding: 1.5rem 1rem;
-            }
-            .bubble-card {
-                width: 115px;
-                padding: 1rem 0.3rem;
-            }
-            .bubble-card i {
-                font-size: 1.8rem;
-            }
-            .ghost-title {
-                font-size: 1.8rem;
-            }
-            .circle-img {
-                width: 110px;
-                height: 110px;
-            }
-        }
-    </style>
+  .acc-content {
+    padding: 6px 18px 18px 18px;
+    border-top: 1px solid rgba(200,20,20,0.2);
+  }
+
+  /* Number link */
+  .number-link {
+    display: block;
+    text-align: center;
+    padding: 13px 20px;
+    margin-top: 8px;
+    background: rgba(200,0,10,0.18);
+    border: 1px solid rgba(255,30,30,0.35);
+    border-radius: 10px;
+    color: #fff;
+    font-family: 'Rajdhani', sans-serif;
+    font-weight: 700;
+    font-size: 1.2rem;
+    letter-spacing: 0.1em;
+    text-decoration: none;
+    transition: background 0.2s, box-shadow 0.2s;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .number-link:active {
+    background: rgba(200,0,10,0.4);
+    box-shadow: 0 0 18px rgba(255,0,20,0.35);
+  }
+  .number-label {
+    display: block;
+    font-size: 0.75rem;
+    color: var(--sub);
+    letter-spacing: 0.08em;
+    margin-bottom: 2px;
+    font-weight: 400;
+  }
+
+  /* Artist name */
+  .artist-name {
+    text-align: center;
+    padding: 12px;
+    margin-top: 8px;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.5rem;
+    letter-spacing: 0.1em;
+    color: #fff;
+    text-shadow: 0 0 10px rgba(255,80,80,0.5);
+    background: rgba(200,0,10,0.12);
+    border: 1px solid rgba(255,30,30,0.2);
+    border-radius: 10px;
+  }
+
+  /* Anime list */
+  .anime-list {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    margin-top: 8px;
+  }
+
+  .anime-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 14px;
+    background: rgba(150,5,5,0.2);
+    border: 1px solid rgba(255,30,30,0.18);
+    border-radius: 9px;
+    color: #fff;
+    font-size: 0.98rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+  }
+
+  .anime-dot {
+    width: 6px; height: 6px;
+    background: var(--red-glow);
+    border-radius: 50%;
+    flex-shrink: 0;
+    box-shadow: 0 0 6px var(--red-glow);
+  }
+
+  /* Pulse glow on card corners */
+  .card::before {
+    content: '';
+    position: absolute;
+    inset: -1px;
+    border-radius: 18px;
+    background: transparent;
+    border: 1px solid rgba(255,0,10,0.1);
+    box-shadow: 0 0 30px rgba(200,0,0,0.15);
+    pointer-events: none;
+    animation: pulse 3s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { box-shadow: 0 0 20px rgba(200,0,0,0.1); }
+    50%       { box-shadow: 0 0 40px rgba(255,0,10,0.3); }
+  }
+</style>
 </head>
 <body>
 
-<div class="glass-container">
-    <!-- imagem no topo dentro de círculo arredondado (borda circular) -->
-    <div class="avatar-area">
-        <img class="circle-img" id="profileImage" src="https://placehold.co/400x400/1f0a0a/ff4d4d?text=GHOST" alt="avatar ghost">
-        <!-- ⚠️ Substitua o src acima pelo link da sua imagem. Ex: "https://seusite.com/foto.jpg" -->
+<div class="bg"></div>
+<div class="corners"><span></span></div>
+
+<div class="card">
+  <div class="avatar-wrap">
+    <div class="avatar-ring">
+      <div class="avatar-inner">
+        <img src="https://i.ibb.co/Y4RqzcpZ/1000111643.jpg" alt="Ghostzin'zk" onerror="this.style.background='#1a0000'">
+      </div>
+    </div>
+  </div>
+
+  <div class="name">GHOST<span>ZIN'ZK</span></div>
+
+  <div class="accordion">
+
+    <!-- MEU NÚMERO -->
+    <div class="acc-item" id="item-numero">
+      <div class="acc-header" onclick="toggle('item-numero')">
+        <div class="acc-icon">📞</div>
+        <div class="acc-label">MEU NÚMERO</div>
+        <div class="acc-arrow">▶</div>
+      </div>
+      <div class="acc-body">
+        <div class="acc-content">
+          <a class="number-link" href="https://wa.me/5545999259081" target="_blank" rel="noopener">
+            <span class="number-label">Clique para abrir no WhatsApp</span>
+            +55 45 9925-9081
+          </a>
+        </div>
+      </div>
     </div>
 
-    <!-- texto Ghostzin'zk em vermelho -->
-    <div class="ghost-title">GHOSTZIN'ZK</div>
-
-    <!-- grade de bolhas clicáveis (menuzin) -->
-    <div class="bubbles-grid">
-        <!-- bolha MEU NÚMERO -->
-        <div class="bubble-card" data-type="numero">
-            <i class="fas fa-phone-alt"></i>
-            <span>Meu número</span>
+    <!-- ARTISTA PREFERIDO -->
+    <div class="acc-item" id="item-artista">
+      <div class="acc-header" onclick="toggle('item-artista')">
+        <div class="acc-icon">🎤</div>
+        <div class="acc-label">ARTISTA PREFERIDO</div>
+        <div class="acc-arrow">▶</div>
+      </div>
+      <div class="acc-body">
+        <div class="acc-content">
+          <div class="artist-name">Marília Mendonça</div>
         </div>
-        <!-- bolha ARTISTA PREFERIDO -->
-        <div class="bubble-card" data-type="artista">
-            <i class="fas fa-microphone-alt"></i>
-            <span>Artista preferido</span>
-        </div>
-        <!-- bolha ANIMES -->
-        <div class="bubble-card" data-type="anime">
-            <i class="fas fa-dragon"></i>
-            <span>Animes</span>
-        </div>
-        <!-- bolha CANTORA -->
-        <div class="bubble-card" data-type="cantora">
-            <i class="fas fa-music"></i>
-            <span>Cantora</span>
-        </div>
+      </div>
     </div>
 
-    <!-- toque feminino sutil no rodapé (bordas e detalhe) -->
-    <div class="feminino-tag">
-        <i class="fas fa-heart"></i> 
-        <span>♡ feminine essence ♡</span>
-        <i class="fas fa-feather-alt"></i>
-    </div>
-</div>
-
-<!-- ========= MODAL "MENUZIN" ========= -->
-<div id="menuModal" class="menu-modal">
-    <div class="modal-card">
-        <h3 id="modalTitle">...</h3>
-        <div id="modalContent">
-            <p>carregando...</p>
+    <!-- ANIMES -->
+    <div class="acc-item" id="item-animes">
+      <div class="acc-header" onclick="toggle('item-animes')">
+        <div class="acc-icon">⚔️</div>
+        <div class="acc-label">ANIMES</div>
+        <div class="acc-arrow">▶</div>
+      </div>
+      <div class="acc-body">
+        <div class="acc-content">
+          <div class="anime-list">
+            <div class="anime-item"><div class="anime-dot"></div>Naruto</div>
+            <div class="anime-item"><div class="anime-dot"></div>Black Clover</div>
+            <div class="anime-item"><div class="anime-dot"></div>Solo Leveling</div>
+            <div class="anime-item"><div class="anime-dot"></div>Hunter x Hunter</div>
+            <div class="anime-item"><div class="anime-dot"></div>Jujutsu Kaisen</div>
+            <div class="anime-item"><div class="anime-dot"></div>Boruto</div>
+            <div class="anime-item"><div class="anime-dot"></div>Nanatsu no Taizai</div>
+          </div>
         </div>
-        <button class="close-modal" id="closeModalBtn">FECHAR ✦</button>
+      </div>
     </div>
+
+  </div>
 </div>
 
 <script>
-    // Elementos do modal
-    const modal = document.getElementById('menuModal');
-    const modalTitle = document.getElementById('modalTitle');
-    const modalContent = document.getElementById('modalContent');
-    const closeBtn = document.getElementById('closeModalBtn');
-
-    // Função que fecha o modal
-    function closeModal() {
-        modal.classList.remove('active');
-    }
-
-    // Função que abre o modal com conteúdo dinâmico (menuzin)
-    function openMenu(type) {
-        // reset
-        modalTitle.innerText = '';
-        modalContent.innerHTML = '';
-
-        // Construir conteúdo baseado no tipo da bolha
-        switch(type) {
-            case 'numero':
-                modalTitle.innerText = '📞 MEU NÚMERO';
-                modalContent.innerHTML = `
-                    <div style="text-align: center;">
-                        <p style="margin-bottom: 0.8rem;">✦ contato direto ✦</p>
-                        <div class="number-highlight">+55 11 98765-4321</div>
-                        <p style="font-size: 0.85rem; margin-top: 12px;">📱 Whatsapp / Telefone<br> (horário noturno preferencial)</p>
-                    </div>
-                `;
-                break;
-            case 'artista':
-                modalTitle.innerText = '🎤 ARTISTA PREFERIDO';
-                modalContent.innerHTML = `
-                    <ul>
-                        <li><i class="fas fa-star" style="color:#ff6b6b;"></i> <strong>Billie Eilish</strong> – vibe sombria e única</li>
-                        <li><i class="fas fa-star" style="color:#ff6b6b;"></i> <strong>The Weeknd</strong> – synthwave & dark pop</li>
-                        <li><i class="fas fa-star" style="color:#ff6b6b;"></i> <strong>Lana Del Rey</strong> – melancolia vintage</li>
-                        <li><i class="fas fa-heart" style="color:#f55;"></i> Menção: <em>Aurora</em> (etérea)</li>
-                    </ul>
-                    <p style="margin-top: 0.5rem; font-style:italic;">"Música que toca a alma sombria"</p>
-                `;
-                break;
-            case 'anime':
-                modalTitle.innerText = '🍥 ANIMES • DARK/FEM';
-                modalContent.innerHTML = `
-                    <ul>
-                        <li>🔮 <strong>Chainsaw Man</strong> – ação, demônios, estética cruel</li>
-                        <li>🌙 <strong>Jujutsu Kaisen</strong> – maldições e poder sombrio</li>
-                        <li>⚔️ <strong>Akame ga Kill!</strong> – intenso e trágico</li>
-                        <li>🌸 <strong>Hell's Paradise</strong> – atmosfera densa</li>
-                        <li>🕷️ <strong>Kumo Desu ga, Nani ka?</strong> – protagonista feminina forte</li>
-                    </ul>
-                    <p>✦ recomendações com pegada dark e feminina ✦</p>
-                `;
-                break;
-            case 'cantora':
-                modalTitle.innerText = '🎙️ CANTORAS FAVORITAS';
-                modalContent.innerHTML = `
-                    <ul>
-                        <li>🎤 <strong>Billie Eilish</strong> – voz assombrosa e letras profundas</li>
-                        <li>🎤 <strong>Halsey</strong> – rock alternativo e poesia visceral</li>
-                        <li>🎤 <strong>AURORA</strong> – mística e etérea</li>
-                        <li>🎤 <strong>Poppy</strong> – metal + dark pop</li>
-                        <li>🎤 <strong>Melanie Martinez</strong> – estética creepy e doce</li>
-                    </ul>
-                    <p style="margin-top: 8px;">🎧 "feminino sombrio e poderoso"</p>
-                `;
-                break;
-            default:
-                modalTitle.innerText = '🩸 Ghostzin';
-                modalContent.innerHTML = `<p>sangue e rosas... clique em uma bolha.</p>`;
-        }
-
-        // Abrir modal com efeito
-        modal.classList.add('active');
-    }
-
-    // Adicionar eventos para cada bolha (data-type)
-    const bubbles = document.querySelectorAll('.bubble-card');
-    bubbles.forEach(bubble => {
-        bubble.addEventListener('click', (e) => {
-            e.stopPropagation();
-            const type = bubble.getAttribute('data-type');
-            if(type) openMenu(type);
-        });
-    });
-
-    // Fechar modal ao clicar no botão
-    closeBtn.addEventListener('click', closeModal);
-    // Fechar modal ao clicar fora do conteúdo (no overlay)
-    modal.addEventListener('click', (e) => {
-        if(e.target === modal) {
-            closeModal();
-        }
-    });
-
-    // Previne scroll ao fundo quando modal aberto
-    modal.addEventListener('wheel', (e) => {
-        e.stopPropagation();
-    }, { passive: false });
-    
-    // Opcional: feedback visual para quem quiser trocar imagem dinamicamente
-    // Para facilitar, a imagem placeholder pode ser trocada via console ou edição direta
-    // O usuário pode alterar o src da imagem #profileImage
-
-    // Pequeno detalhe: caso queira demonstrar troca de imagem, mas deixamos manual via código
-    console.log("✨ Página Ghostzin'ZK carregada! Para inserir sua imagem, edite o src do elemento .circle-img");
+  function toggle(id) {
+    const item = document.getElementById(id);
+    const isOpen = item.classList.contains('open');
+    // Close all
+    document.querySelectorAll('.acc-item').forEach(el => el.classList.remove('open'));
+    // Open clicked if it was closed
+    if (!isOpen) item.classList.add('open');
+  }
 </script>
 
-<!-- Instrução visual sobre o link da imagem -->
-<div style="position: fixed; bottom: 10px; left: 0; right: 0; text-align: center; font-size: 10px; background: #00000080; color:#ff8888; padding: 4px; backdrop-filter: blur(2px); pointer-events: none; z-index: 999;">
-    ⚡ Troque a imagem: edite o atributo "src" da tag &lt;img class="circle-img"&gt; no código HTML.
-</div>
 </body>
 </html>
